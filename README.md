@@ -11,4 +11,4 @@ hello world
 1. python 
 2. python 2
 
-[markdown语法练习](./markdown练习.MD)
+[markdown语法练习](./markdown练习/README.md)
