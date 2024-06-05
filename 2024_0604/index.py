@@ -1,54 +1,69 @@
-# same code but uses FUNCTION() to make nested statements easier
-import requests
-from pprint import pprint # beautify output
-from requests import JSONDecodeError
-from pydantic import BaseModel,RootModel,Field,field_validator
+import tkinter as tk
+from tkinter import ttk 
+from pprint import pprint
+from ttkthemes import ThemedTk
+from tkinter import messagebox
+from tkinter.simpledialog import Dialog
+import tools
 
-class Site(BaseModel):
-    site_name:str = Field(alias='sitename')
-    county:str
-    aqi:int
-    status:str
-    pm25:float = Field(alias='pm2.5')
 
-    @field_validator("pm25",mode='before')
-    @classmethod
-    def abc(cls, value:str)->str:
-        if value=="":
-            return "0.0"
-        else:
-            return value
+class Window(ThemedTk):
+    def __init__(self,**kwargs):
+        super().__init__(**kwargs)
+        self.title("全台空氣品質指標(AQI)")
+        #self.option_add("*Font","微軟正黑體 40")
+        #定義style的名稱
+        style = ttk.Style()
+        style.configure('Top.TFrame')
+        style.configure('Top.TLabel',font=('Helvetica',25,'bold'))
 
-class Records(RootModel):
-    root:list[Site]
+        title_frame = ttk.Frame(self,style='Top.TFrame',borderwidth=2,relief='groove')
+        ttk.Label(title_frame,text='全台空氣品質指標(AQI)',style='Top.TLabel').pack(expand=True,fill='y')
+        title_frame.pack(ipadx=100,ipady=30,padx=10,pady=10)
 
-def download_json()->dict[any]:
+        func_frame = ttk.Frame(self,style='Top.TFrame',borderwidth=1,relief='groove')
+        ttk.Button(func_frame,text="AQI品質最好的5個",command=self.click1).pack(side='left',expand=True)
+        ttk.Button(func_frame,text="AQI品質最差的5個",command=self.click2).pack(side='left',expand=True)
+        ttk.Button(func_frame,text="pm2.5品質最好的5個",command=self.click3).pack(side='left',expand=True)
+        ttk.Button(func_frame,text="pm2.5品質最好的5個",command=self.click4).pack(side='left',expand=True)
+        func_frame.pack(ipadx=100,ipady=30,padx=10,pady=10)
     
-    aqi_url = 'https://data.moenv.gov.tw/api/v2/aqx_p_488?api_key=e8dd42e6-9b8b-43f8-991e-b3dee723a52d&limit=1000&sort=datacreationdate desc&format=JSON'
-    try:
-        response = requests.get(aqi_url)
-    except Exception: 
-        raise Exception("连线失败")
-    else:
-        if response.status_code == 200: 
-            try: 
-                all_data:dict[any] = response.json() # dictionary not string!!!
-                return all_data
+    def click1(self):
+        messagebox.showinfo("information","Infomative message")
+    
+    def click2(self):
+        messagebox.showerror("Error","Error message")
 
-            except JSONDecodeError:
-                raise Exception("cannot decode text into json!")
-        else:
-            raise Exception("Download failed")
+    def click3(self):
+        messagebox.showwarning("Warning","Warning message")
+    
+    def click4(self):
+        ShowInfo(parent=self,title="Dialog")
+
+class ShowInfo(Dialog): 
+    def __init__(self,**kwargs): 
+        super().__init__(**kwargs)
+
+    def body(self, master):
+        text = tk.Text(self,height=8,font=('Helvetica',25),width=40)
+        text.pack(padx=10,pady=10)
+        text.insert(tk.INSERT,"測試的文字")
+        text.config(state='disabled')
+        return None
 
 def main():
+    '''
     try:
-        all_data:dict[any] = download_json()
+        all_data:dict[any] = tools.download_json()
     except Exception as error:
         print(error)
-    else:
-        records:Records = Records.model_validate(all_data['records'])
-        data:list[dict] = records.model_dump()
+    else:        
+        data:list[dict] = tools.get_data(all_data)
         pprint(data)
+    '''
+    window = Window(theme="arc")
+    window.mainloop()
+    
 
 if __name__ == '__main__':
     main()
