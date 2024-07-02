@@ -2,3 +2,5 @@ git fetch upstream
 git checkout main
 git push origin main
 git pull
+
+git pull https://github.com/roberthsu2003/__11304_python_2024_tvdi__ main
