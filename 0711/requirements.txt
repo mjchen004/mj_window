@@ -1,0 +1,4 @@
+flask 
+gunicorn  
+psycopg2-binary #连线postgresql
+python-dotenv #模拟环境
