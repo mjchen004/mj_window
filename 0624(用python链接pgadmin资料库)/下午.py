@@ -57,7 +57,7 @@ import data
 
 def main():
     
-    conn = psycopg2.connect("postgresql://tvdi_ecbm_user:83RAfDagPTvAhdxU5DSz4jtYS94zr4Lt@dpg-cpscsaaj1k6c738l6hhg-a.singapore-postgres.render.com/tvdi_ecbm")
+    conn = psycopg2.connect("postgresql://tvdi_postgresql_new_b3wx_user:K4XGCCwSgJ6jWdBNhTLq9JniYjzmvIH2@dpg-cqa8dr5ds78s739nis2g-a.singapore-postgres.render.com/tvdi_postgresql_new_b3wx")
 
     with conn: #with conn會自動commit()
         # 建立cursor, CREATE TABLE
