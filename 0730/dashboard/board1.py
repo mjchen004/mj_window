@@ -1,16 +1,13 @@
 from dash import Dash,html,dcc,Input,Output,callback
-import plotly.express as px
 import pandas as pd
+import plotly.express as px
 
-dashboard = Dash(__name__,requests_pathname_prefix='/dashboard/dashboard/')
-dashboard.title = 'plot'
-
+app1 = Dash(__name__,requests_pathname_prefix='/dashboard/app1/')
+app1.title = '全球表單'
 
 df = pd.read_csv('https://plotly.github.io/datasets/country_indicators.csv')
-dff = df[df['Year'] == 1962]
-dff[dff['Indicator Name'] == 'Agriculture, value added (% of GDP)}']['Value']
 
-dashboard.layout = html.Div([
+app1.layout = html.Div([
     html.Div([
         html.Div([
             dcc.Dropdown(
@@ -50,13 +47,13 @@ dashboard.layout = html.Div([
     )
 
 ])
-
-@callback(
+#如果要連結2個dash,必需要加上app1
+@app1.callback(
     Output('indicator-graphic','figure'),
     Input('xaxis-column','value'),
     Input('yaxis-column','value'),
     Input('xaxis-type','value'),
-    Input('yaxis-type','value'), 
+    Input('yaxis-type','value'),
     Input('year--slider','value')   
 )
 def update_graph(xaxis_column_name,
@@ -69,9 +66,11 @@ def update_graph(xaxis_column_name,
     xValue = dff[dff['Indicator Name'] == xaxis_column_name]['Value']
     yValue = dff[dff['Indicator Name'] == yaxis_column_name]['Value']
     hoverValue = dff[dff['Indicator Name'] == yaxis_column_name]['Country Name']
-    fig = px.scatter(x=xValue,
-               y=yValue,
-               hover_name = hoverValue)
+    fig = px.scatter(
+                x=xValue,
+                y=yValue,
+                hover_name=hoverValue)
+    
     fig.update_layout(margin={'l':40, 'b':40, 't':10, 'r':0},
                       hovermode='closest')
     
@@ -81,4 +80,6 @@ def update_graph(xaxis_column_name,
     fig.update_yaxes(title=yaxis_column_name,
                      type='linear' if yaxis_type == 'Linear' else 'log')
     return fig
+
+    
 
