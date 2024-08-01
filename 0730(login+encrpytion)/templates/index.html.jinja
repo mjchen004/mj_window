@@ -8,12 +8,16 @@
 {{ super() }}
 <style type"text/css">
     body {
-        background-color:white;
+        background-color: white;
     }
 </style>
 {% endblock %}
 
 
 {% block main%}
+{% if username %}
+<h3>😎😍🥸{{username}}🤑👹🤗</h3>
+{% endif %}
+
 <h1>這是首頁</h1>
 {% endblock %}
